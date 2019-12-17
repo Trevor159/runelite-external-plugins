@@ -14,7 +14,6 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.chatboxopacity.ChatboxOpacityConfig;
 
 @PluginDescriptor(
 	name = "Chatbox Opacity",
@@ -28,13 +27,13 @@ public class ChatboxOpacityPlugin extends Plugin
 	private Client client;
 
 	@Inject
-	private net.runelite.client.plugins.chatboxopacity.ChatboxOpacityConfig config;
+	private ChatboxOpacityConfig config;
 
 	@Inject
 	private ClientThread clientThread;
 
 	@Provides
-	net.runelite.client.plugins.chatboxopacity.ChatboxOpacityConfig provideConfig(ConfigManager configManager)
+	ChatboxOpacityConfig provideConfig(ConfigManager configManager)
 	{
 		return configManager.getConfig(ChatboxOpacityConfig.class);
 	}
