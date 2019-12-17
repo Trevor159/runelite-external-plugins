@@ -45,7 +45,7 @@ public class RaidReloaderPlugin extends Plugin
 		panel = injector.getInstance(RaidReloaderPanel.class);
 		panel.init();
 
-		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "/util/panel_icon.png");
+		final BufferedImage icon = ImageUtil.getResourceStreamFromClass(getClass(), "/util/raidreloader.png");
 
 		navButton = NavigationButton.builder()
 			.tooltip("Raid Reloader")
