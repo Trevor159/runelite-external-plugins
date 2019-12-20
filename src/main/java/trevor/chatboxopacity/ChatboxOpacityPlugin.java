@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Varbits;
-import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ScriptCallbackEvent;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -47,14 +47,17 @@ public class ChatboxOpacityPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-		clientThread.invoke(() -> client.runScript(923));
+		clientThread.invoke(() -> client.runScript(BUILD_CHATBOX_SCRIPT));
 	}
 
-	// I was going to only set it when the wi``dget is loaded but it likes to reset itself a lot
-	// I didn't feel like fixing it in scripts so here is the lazy way
 	@Subscribe
-	private void onGameTick(GameTick event)
+	private void onScriptCallbackEvent(ScriptCallbackEvent ev)
 	{
+		if (!"chatboxBackgroundBuilt".equals(ev.getEventName()))
+		{
+			return;
+		}
+
 		writeChatboxOpacity(config.opacity());
 	}
 
@@ -75,7 +78,14 @@ public class ChatboxOpacityPlugin extends Plugin
 			return;
 		}
 
-		Widget widget = client.getWidget(WidgetInfo.CHATBOX_TRANSPARENT_BACKGROUND);
+		Widget widget = client.getWidget(WidgetInfo.CHATBOX_MESSAGES);
+
+		if (widget == null || widget.isHidden())
+		{
+			return;
+		}
+
+		widget = client.getWidget(WidgetInfo.CHATBOX_TRANSPARENT_BACKGROUND);
 		Widget[] children = widget.getChildren();
 
 		for (Widget child : children)
