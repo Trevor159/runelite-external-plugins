@@ -64,7 +64,7 @@ public class ChatboxOpacityPlugin extends Plugin
 	@Subscribe
 	private void onConfigChanged(ConfigChanged event)
 	{
-		if (event.getGroup().equals("chatboxgradient"))
+		if (event.getGroup().equals("chatboxopacity"))
 		{
 			clientThread.invoke(() -> writeChatboxOpacity(config.opacity()));
 		}
