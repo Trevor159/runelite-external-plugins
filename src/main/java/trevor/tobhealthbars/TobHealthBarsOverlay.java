@@ -58,10 +58,15 @@ public class TobHealthBarsOverlay extends Overlay
 			{
 				break;
 			}
-			else if (healthVarb > 27) // no idea why this is ever more than 27
+			else if (healthVarb == 30) // how the player as 0 hp when thy are dead
 			{
-				healthVarb = 27;
+				healthVarb = 1;
 			}
+
+//			if (i > 0)
+//			{
+//				panel.getChildren().add(LineComponent.builder().build());
+//			}
 
 			if (localPlayerIndex == i && !config.showLocalName())
 			{

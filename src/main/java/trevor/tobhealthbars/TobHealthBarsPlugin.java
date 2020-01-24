@@ -46,7 +46,7 @@ public class TobHealthBarsPlugin extends Plugin
 		 * varb to render the orb
 		 * 0 means that the orb should not be rendered
 		 * 1-27 is the % the heath is at, 27 is 100% health 1 is 0% health
-		 * 30 means the player is respawning outside tob?
+		 * 30 means the player is dead
 		 */
 		final private int healthVarb;
 
