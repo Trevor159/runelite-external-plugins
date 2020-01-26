@@ -1,5 +1,6 @@
 package trevor.raidpointsoverlay;
 
+import com.google.inject.Provides;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import net.runelite.api.events.WidgetHiddenChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -61,6 +63,12 @@ public class RaidPointsOverlayPlugin extends Plugin
 
 	@Getter
 	private String tooltip;
+
+	@Provides
+	RaidsPointsConfig provideConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(RaidsPointsConfig.class);
+	}
 
 	@Override
 	protected void startUp() throws Exception

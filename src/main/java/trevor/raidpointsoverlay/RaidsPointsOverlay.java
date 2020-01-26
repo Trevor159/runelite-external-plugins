@@ -46,6 +46,7 @@ public class RaidsPointsOverlay extends Overlay
 
 	private Client client;
 	private RaidPointsOverlayPlugin plugin;
+	private  RaidsPointsConfig config;
 	private TooltipManager tooltipManager;
 
 	private final PanelComponent panel = new PanelComponent();
@@ -53,10 +54,12 @@ public class RaidsPointsOverlay extends Overlay
 	@Inject
 	private RaidsPointsOverlay(Client client,
 							   RaidPointsOverlayPlugin plugin,
+							   RaidsPointsConfig config,
 							   TooltipManager tooltipManager)
 	{
 		this.client = client;
 		this.plugin = plugin;
+		this.config = config;
 		this.tooltipManager = tooltipManager;
 		setPosition(OverlayPosition.TOP_RIGHT);
 		setPriority(OverlayPriority.HIGH);
@@ -85,12 +88,15 @@ public class RaidsPointsOverlay extends Overlay
 			.right(POINTS_FORMAT.format(personalPoints))
 			.build());
 
-		panel.getChildren().add(LineComponent.builder()
-			.left("Time:")
-			.right(plugin.getTime())
-			.build());
+		if (config.raidsTimer())
+		{
+			panel.getChildren().add(LineComponent.builder()
+				.left("Time:")
+				.right(plugin.getTime())
+				.build());
+		}
 
-		if (partySize > 1)
+		if (partySize > 1 && config.showTeamSize())
 		{
 			panel.getChildren().add(LineComponent.builder()
 				.left("Party size:")
