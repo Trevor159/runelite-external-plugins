@@ -117,7 +117,7 @@ public class RaidPointsOverlayPlugin extends Plugin
 		if (timerVarb > 0 && raidState < 5)
 		{
 			//mimic the script when the widget is hidden
-			client.runScript(2289);
+			client.runScript(2289, 0, 0, 0);
 		}
 	}
 
