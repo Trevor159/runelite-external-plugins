@@ -1,6 +1,5 @@
 package com.trevor.greenscreen;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,17 +17,16 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 
 public class GreenScreenOverlay extends Overlay
 {
-
-	private static final Color KEY_COLOR = new Color(41, 244, 24);
-
 	private Client client;
+	private GreenScreenConfig config;
 
 	@Inject
-	public GreenScreenOverlay(Client client, GreenScreenPlugin plugin) {
+	public GreenScreenOverlay(Client client, GreenScreenPlugin plugin, GreenScreenConfig config) {
 		super(plugin);
 		setPosition(OverlayPosition.DYNAMIC);
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		this.client = client;
+		this.config = config;
 	}
 
 	@Override
@@ -37,7 +35,7 @@ public class GreenScreenOverlay extends Overlay
 		BufferedImage image = new BufferedImage(client.getCanvasWidth(), client.getCanvasHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = image.getGraphics();
 
-		g.setColor(KEY_COLOR);
+		g.setColor(config.greenscreenColor());
 		g.fillRect(0, 0, image.getWidth(), image.getHeight());
 
 		Polygon[] polygons = client.getLocalPlayer().getPolygons();
