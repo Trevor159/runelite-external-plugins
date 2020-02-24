@@ -57,7 +57,12 @@ public class GreenScreenOverlay extends Overlay
 		Rectangle bounds = p.getBounds();
 		for (double y = bounds.getMinY(); y < bounds.getMaxY(); y++) {
 			for (double x = bounds.getMinX(); x < bounds.getMaxX(); x++) {
-				if (p.contains(x, y)) {
+				if (p.contains(x, y)
+					&& x >= 0
+					&& x < client.getCanvasWidth()
+					&& y >= 0
+					&& y < client.getCanvasHeight()
+				) {
 					image.setRGB((int)x, (int)y, 0x00000000);
 				}
 			}
