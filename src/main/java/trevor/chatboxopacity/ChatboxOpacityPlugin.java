@@ -73,6 +73,7 @@ public class ChatboxOpacityPlugin extends Plugin
 	private void writeChatboxOpacity(int opacity)
 	{
 		if (client.getGameState() != GameState.LOGGED_IN
+			|| !client.isResized()
 			|| client.getVar(Varbits.TRANSPARENT_CHATBOX) == 0)
 		{
 			return;
