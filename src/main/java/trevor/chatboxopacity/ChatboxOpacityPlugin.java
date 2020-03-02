@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Varbits;
-import net.runelite.api.events.ScriptCallbackEvent;
+import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -51,9 +51,9 @@ public class ChatboxOpacityPlugin extends Plugin
 	}
 
 	@Subscribe
-	private void onScriptCallbackEvent(ScriptCallbackEvent ev)
+	private void onScriptPostFired(ScriptPostFired event)
 	{
-		if (!"chatboxBackgroundBuilt".equals(ev.getEventName()))
+		if (event.getScriptId() != BUILD_CHATBOX_SCRIPT)
 		{
 			return;
 		}
