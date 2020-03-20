@@ -26,4 +26,24 @@ public interface RaidsPointsConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "raidsPointsPercent",
+		name = "Display personal points percent",
+		description = "Displays the personal points percents of the total points"
+	)
+	default boolean raidsPointsPercent()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "raidsUniqueChance",
+		name = "Display the chance of an unique",
+		description = "Displays the chance that a single unique could be in raid loot"
+	)
+	default boolean raidsUniqueChance()
+	{
+		return true;
+	}
 }

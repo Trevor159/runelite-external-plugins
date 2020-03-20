@@ -25,6 +25,7 @@
 package trevor.raidpointsoverlay;
 
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.text.DecimalFormat;
@@ -35,6 +36,7 @@ import net.runelite.api.Varbits;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
+import net.runelite.client.ui.overlay.components.ComponentConstants;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.PanelComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
@@ -43,10 +45,12 @@ import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 public class RaidsPointsOverlay extends Overlay
 {
 	private static final DecimalFormat POINTS_FORMAT = new DecimalFormat("#,###");
+	private static final DecimalFormat POINTS_PERCENT_FORMAT = new DecimalFormat(" (##0.00%)");
+	private static final DecimalFormat UNIQUE_FORMAT = new DecimalFormat("#0.00%");
 
 	private Client client;
 	private RaidPointsOverlayPlugin plugin;
-	private  RaidsPointsConfig config;
+	private RaidsPointsConfig config;
 	private TooltipManager tooltipManager;
 
 	private final PanelComponent panel = new PanelComponent();
@@ -76,6 +80,8 @@ public class RaidsPointsOverlay extends Overlay
 		int totalPoints = client.getVar(Varbits.TOTAL_POINTS);
 		int personalPoints = client.getVar(Varbits.PERSONAL_POINTS);
 		int partySize = client.getVar(Varbits.RAID_PARTY_SIZE);
+		FontMetrics metrics = graphics.getFontMetrics();
+		int panelWidth;
 
 		panel.getChildren().clear();
 		panel.getChildren().add(LineComponent.builder()
@@ -83,9 +89,21 @@ public class RaidsPointsOverlay extends Overlay
 			.right(POINTS_FORMAT.format(totalPoints))
 			.build());
 
+		String personalPointsPercent = "";
+		if (config.raidsPointsPercent() && partySize > 1)
+		{
+			personalPointsPercent += totalPoints > 0 ?
+				POINTS_PERCENT_FORMAT.format((double) personalPoints / totalPoints) :
+				POINTS_PERCENT_FORMAT.format(0);
+		}
+		String personalPointsString = POINTS_FORMAT.format(personalPoints) + personalPointsPercent;
+
+		panelWidth = Math.max(ComponentConstants.STANDARD_WIDTH,
+			metrics.stringWidth(client.getLocalPlayer().getName() + ":" + personalPointsString) + 14);
+
 		panel.getChildren().add(LineComponent.builder()
 			.left(client.getLocalPlayer().getName() + ":")
-			.right(POINTS_FORMAT.format(personalPoints))
+			.right(personalPointsString)
 			.build());
 
 		if (config.raidsTimer())
@@ -101,6 +119,21 @@ public class RaidsPointsOverlay extends Overlay
 			panel.getChildren().add(LineComponent.builder()
 				.left("Party size:")
 				.right(String.valueOf(partySize))
+				.build());
+		}
+
+		if (config.raidsUniqueChance())
+		{
+			// 0.675 is rate at which the droprate switches to other roll and doesn't go up for a single drop per wiki
+			double totalUniqueChance = Math.min((double) personalPoints / 867500, 0.657);
+			double personalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
+
+			String uniqueChance = UNIQUE_FORMAT.format(personalUniqueChance)
+				+ " (" + UNIQUE_FORMAT.format(totalUniqueChance) + ")";
+			panelWidth = Math.max(panelWidth, metrics.stringWidth("Unique:" + uniqueChance) + 14);
+			panel.getChildren().add(LineComponent.builder()
+				.left("Unique:")
+				.right(uniqueChance)
 				.build());
 		}
 
@@ -120,6 +153,7 @@ public class RaidsPointsOverlay extends Overlay
 			}
 		}
 
+		panel.setPreferredSize(new Dimension(panelWidth, 0));
 		return panel.render(graphics);
 	}
 }
