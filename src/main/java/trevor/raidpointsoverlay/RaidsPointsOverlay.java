@@ -125,8 +125,8 @@ public class RaidsPointsOverlay extends Overlay
 		if (config.raidsUniqueChance())
 		{
 			// 0.675 is rate at which the droprate switches to other roll and doesn't go up for a single drop per wiki
-			double totalUniqueChance = Math.min((double) personalPoints / 867500, 0.657);
-			double personalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
+			double totalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
+			double personalUniqueChance = Math.min((double) personalPoints / 867500, 0.657);
 
 			String uniqueChance = UNIQUE_FORMAT.format(personalUniqueChance)
 				+ " (" + UNIQUE_FORMAT.format(totalUniqueChance) + ")";
