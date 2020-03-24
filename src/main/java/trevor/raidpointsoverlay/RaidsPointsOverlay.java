@@ -24,12 +24,6 @@
  */
 package trevor.raidpointsoverlay;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.text.DecimalFormat;
-import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.api.Varbits;
@@ -41,6 +35,10 @@ import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.PanelComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
 import net.runelite.client.ui.overlay.tooltip.TooltipManager;
+
+import javax.inject.Inject;
+import java.awt.*;
+import java.text.DecimalFormat;
 
 public class RaidsPointsOverlay extends Overlay
 {
@@ -125,11 +123,15 @@ public class RaidsPointsOverlay extends Overlay
 		if (config.raidsUniqueChance())
 		{
 			// 0.675 is rate at which the droprate switches to other roll and doesn't go up for a single drop per wiki
-			double totalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
 			double personalUniqueChance = Math.min((double) personalPoints / 867500, 0.657);
+			String uniqueChance = UNIQUE_FORMAT.format(personalUniqueChance);
 
-			String uniqueChance = UNIQUE_FORMAT.format(personalUniqueChance)
-				+ " (" + UNIQUE_FORMAT.format(totalUniqueChance) + ")";
+			if(partySize > 1)
+			{
+				double totalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
+				uniqueChance += " (" + UNIQUE_FORMAT.format(totalUniqueChance) + ")";
+			}
+
 			panelWidth = Math.max(panelWidth, metrics.stringWidth("Unique:" + uniqueChance) + 14);
 			panel.getChildren().add(LineComponent.builder()
 				.left("Unique:")
