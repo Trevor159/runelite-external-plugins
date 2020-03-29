@@ -42,8 +42,8 @@ public interface RaidsPointsConfig extends Config
 		name = "Display the chance of an unique",
 		description = "Displays the chance that a single unique could be in raid loot"
 	)
-	default boolean raidsUniqueChance()
+	default UniqueConfigOptions raidsUniqueChance()
 	{
-		return true;
+		return UniqueConfigOptions.BOTH;
 	}
 }

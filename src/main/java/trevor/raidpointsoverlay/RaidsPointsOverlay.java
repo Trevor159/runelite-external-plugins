@@ -122,16 +122,32 @@ public class RaidsPointsOverlay extends Overlay
 				.build());
 		}
 
-		if (config.raidsUniqueChance())
+		if (config.raidsUniqueChance() != UniqueConfigOptions.OFF)
 		{
 			// 0.675 is rate at which the droprate switches to other roll and doesn't go up for a single drop per wiki
 			double personalUniqueChance = Math.min((double) personalPoints / 867500, 0.657);
-			String uniqueChance = UNIQUE_FORMAT.format(personalUniqueChance);
+			String personalUniqueChanceStr = UNIQUE_FORMAT.format(personalUniqueChance);
 
-			if(partySize > 1)
+			double totalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
+			String totalUniqueChanceStr = UNIQUE_FORMAT.format(totalUniqueChance);
+
+			String uniqueChance;
+			if (config.raidsUniqueChance() != UniqueConfigOptions.BOTH)
 			{
-				double totalUniqueChance = Math.min((double) totalPoints / 867500, 0.657);
-				uniqueChance += " (" + UNIQUE_FORMAT.format(totalUniqueChance) + ")";
+				uniqueChance = personalUniqueChanceStr;
+
+				if(partySize > 1)
+				{
+					uniqueChance += " (" + totalUniqueChanceStr + ")";
+				}
+			}
+			else if (config.raidsUniqueChance() != UniqueConfigOptions.PERSONAL_CHANCE)
+			{
+				uniqueChance = personalUniqueChanceStr;
+			}
+			else
+			{
+				uniqueChance = totalUniqueChanceStr;
 			}
 
 			panelWidth = Math.max(panelWidth, metrics.stringWidth("Unique:" + uniqueChance) + 14);
