@@ -132,7 +132,7 @@ public class RaidsPointsOverlay extends Overlay
 			String totalUniqueChanceStr = UNIQUE_FORMAT.format(totalUniqueChance);
 
 			String uniqueChance;
-			if (config.raidsUniqueChance() != UniqueConfigOptions.BOTH)
+			if (config.raidsUniqueChance() == UniqueConfigOptions.BOTH)
 			{
 				uniqueChance = personalUniqueChanceStr;
 
@@ -141,7 +141,7 @@ public class RaidsPointsOverlay extends Overlay
 					uniqueChance += " (" + totalUniqueChanceStr + ")";
 				}
 			}
-			else if (config.raidsUniqueChance() != UniqueConfigOptions.PERSONAL_CHANCE)
+			else if (config.raidsUniqueChance() == UniqueConfigOptions.PERSONAL_CHANCE)
 			{
 				uniqueChance = personalUniqueChanceStr;
 			}
