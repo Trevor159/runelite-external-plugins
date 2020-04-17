@@ -33,16 +33,14 @@ import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.api.Varbits;
-import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
-import net.runelite.client.ui.overlay.components.ComponentConstants;
 import net.runelite.client.ui.overlay.components.LineComponent;
-import net.runelite.client.ui.overlay.components.PanelComponent;
 import net.runelite.client.ui.overlay.tooltip.Tooltip;
 import net.runelite.client.ui.overlay.tooltip.TooltipManager;
 
-public class RaidsPointsOverlay extends Overlay
+public class RaidsPointsOverlay extends OverlayPanel
 {
 	private static final DecimalFormat POINTS_FORMAT = new DecimalFormat("#,###");
 	private static final DecimalFormat POINTS_PERCENT_FORMAT = new DecimalFormat(" (##0.00%)");
@@ -52,8 +50,6 @@ public class RaidsPointsOverlay extends Overlay
 	private RaidPointsOverlayPlugin plugin;
 	private RaidsPointsConfig config;
 	private TooltipManager tooltipManager;
-
-	private final PanelComponent panel = new PanelComponent();
 
 	@Inject
 	private RaidsPointsOverlay(Client client,
@@ -81,10 +77,8 @@ public class RaidsPointsOverlay extends Overlay
 		int personalPoints = client.getVar(Varbits.PERSONAL_POINTS);
 		int partySize = client.getVar(Varbits.RAID_PARTY_SIZE);
 		FontMetrics metrics = graphics.getFontMetrics();
-		int panelWidth;
 
-		panel.getChildren().clear();
-		panel.getChildren().add(LineComponent.builder()
+		panelComponent.getChildren().add(LineComponent.builder()
 			.left("Total:")
 			.right(POINTS_FORMAT.format(totalPoints))
 			.build());
@@ -98,17 +92,14 @@ public class RaidsPointsOverlay extends Overlay
 		}
 		String personalPointsString = POINTS_FORMAT.format(personalPoints) + personalPointsPercent;
 
-		panelWidth = Math.max(ComponentConstants.STANDARD_WIDTH,
-			metrics.stringWidth(client.getLocalPlayer().getName() + ":" + personalPointsString) + 14);
-
-		panel.getChildren().add(LineComponent.builder()
+		panelComponent.getChildren().add(LineComponent.builder()
 			.left(client.getLocalPlayer().getName() + ":")
 			.right(personalPointsString)
 			.build());
 
 		if (config.raidsTimer())
 		{
-			panel.getChildren().add(LineComponent.builder()
+			panelComponent.getChildren().add(LineComponent.builder()
 				.left("Time:")
 				.right(plugin.getTime())
 				.build());
@@ -116,7 +107,7 @@ public class RaidsPointsOverlay extends Overlay
 
 		if (partySize > 1 && config.showTeamSize())
 		{
-			panel.getChildren().add(LineComponent.builder()
+			panelComponent.getChildren().add(LineComponent.builder()
 				.left("Party size:")
 				.right(String.valueOf(partySize))
 				.build());
@@ -150,8 +141,7 @@ public class RaidsPointsOverlay extends Overlay
 				uniqueChance = totalUniqueChanceStr;
 			}
 
-			panelWidth = Math.max(panelWidth, metrics.stringWidth("Unique:" + uniqueChance) + 14);
-			panel.getChildren().add(LineComponent.builder()
+			panelComponent.getChildren().add(LineComponent.builder()
 				.left("Unique:")
 				.right(uniqueChance)
 				.build());
@@ -172,8 +162,6 @@ public class RaidsPointsOverlay extends Overlay
 				}
 			}
 		}
-
-		panel.setPreferredSize(new Dimension(panelWidth, 0));
-		return panel.render(graphics);
+		return super.render(graphics);
 	}
 }
