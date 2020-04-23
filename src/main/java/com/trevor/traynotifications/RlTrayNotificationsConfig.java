@@ -8,12 +8,12 @@ import net.runelite.client.config.ConfigItem;
 public interface RlTrayNotificationsConfig extends Config
 {
 	@ConfigItem(
-		keyName = "greeting",
-		name = "Welcome Greeting",
-		description = "The message to show to the user when they login"
+		keyName = "monitor",
+		name = "Monitor",
+		description = "Which monitor do you want to display the notification on"
 	)
-	default String greeting()
+	default RlTrayNotificationsPlugin.MonitorConfig monitor()
 	{
-		return "Hello";
+		return RlTrayNotificationsPlugin.MonitorConfig.CURRENT_MONITOR;
 	}
 }
