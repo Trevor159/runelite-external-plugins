@@ -166,6 +166,11 @@ public class TobDamageCounterPlugin extends Plugin
 
 		Hitsplat hitsplat = hitsplatApplied.getHitsplat();
 
+		if (currentRoom == null)
+		{
+			return;
+		}
+
 		if (hitsplat.isMine())
 		{
 			damageMap.get(currentRoom).addDamage(hitsplat.getAmount(), true);
@@ -233,11 +238,15 @@ public class TobDamageCounterPlugin extends Plugin
 				}
 			}
 		}
+		else if (currentRoom.getNpcIds().contains(npcID))
+		{
+			return;
+		}
 		else
 		{
 			TobRooms[] values = TobRooms.values();
 
-			for (int i = currentRoom.ordinal(); i < values.length; i++)
+			for (int i = 0; i < values.length; i++)
 			{
 				TobRooms room = values[i];
 				if (room.getNpcIds().contains(npcID))
@@ -248,6 +257,7 @@ public class TobDamageCounterPlugin extends Plugin
 			}
 		}
 
+		currentRoom = null;
 		log.warn("NPC ID not handled: " + npcID);
 	}
 

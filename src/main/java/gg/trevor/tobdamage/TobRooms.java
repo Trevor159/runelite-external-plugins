@@ -74,6 +74,8 @@ public enum TobRooms
 	),
 	XARPUS(
 		"Xarpus",
+		NpcID.XARPUS,
+		NpcID.XARPUS_8339,
 		NpcID.XARPUS_8340,
 		NpcID.XARPUS_8341
 	),
