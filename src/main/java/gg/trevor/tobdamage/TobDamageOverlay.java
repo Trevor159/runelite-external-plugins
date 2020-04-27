@@ -26,7 +26,9 @@ package gg.trevor.tobdamage;
 
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.util.Map;
 import javax.inject.Inject;
+import net.runelite.api.Player;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
@@ -35,12 +37,14 @@ import net.runelite.client.util.QuantityFormatter;
 class TobDamageOverlay extends OverlayPanel
 {
 	private final TobDamageCounterPlugin plugin;
+	private final TobDamageCounterConfig config;
 
 	@Inject
-	TobDamageOverlay(TobDamageCounterPlugin plugin)
+	TobDamageOverlay(TobDamageCounterPlugin plugin, TobDamageCounterConfig config)
 	{
 		super(plugin);
 		this.plugin = plugin;
+		this.config = config;
 	}
 
 	@Override
@@ -90,6 +94,36 @@ class TobDamageOverlay extends OverlayPanel
 				.left(left)
 				.right(right)
 				.build());
+
+		if (config.showHealCount())
+		{
+			panelComponent.getChildren().add(
+				LineComponent.builder()
+					.left("Total Healing")
+					.right(QuantityFormatter.formatNumber(damage.getTotalHealing()))
+					.build()
+			);
+		}
+
+		if (config.showLeechOverlay() && damage.getLeechCounts().size() != 0)
+		{
+			panelComponent.getChildren().add(LineComponent.builder().build());
+
+			panelComponent.getChildren().add(
+				TitleComponent.builder()
+					.text("Leech Count")
+					.build());
+
+			Map<Player, Integer> leeches = damage.getLeechCounts();
+			for (Player p : leeches.keySet())
+			{
+				panelComponent.getChildren().add(
+					LineComponent.builder()
+						.left(p.getName())
+						.right(leeches.get(p) + "")
+						.build());
+			}
+		}
 
 
 		return super.render(graphics);

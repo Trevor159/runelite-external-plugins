@@ -8,12 +8,40 @@ import net.runelite.client.config.ConfigItem;
 public interface TobDamageCounterConfig extends Config
 {
 	@ConfigItem(
+		keyName = "healCount",
+		name = "Show Heal Count",
+		description = "Show the total amount healed to each boss on the overlay."
+	)
+	default boolean showHealCount()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "damageSummary",
 		name = "Print Raid Summary",
 		description = "Print the damage of all the rooms when the raid ends."
 	)
 	default boolean showDamageSummary()
 	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "leechMessages",
+		name = "Leech Messages",
+		description = "Print messages when a player leeches"
+	)
+	default boolean showLeechMessages() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "leechOverlay",
+		name = "Leech Overlay",
+		description = "Show leech counts on the overlay"
+	)
+	default boolean showLeechOverlay() {
 		return true;
 	}
 }

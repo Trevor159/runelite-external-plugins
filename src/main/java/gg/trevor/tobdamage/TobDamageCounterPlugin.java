@@ -15,14 +15,19 @@ import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Hitsplat;
+import net.runelite.api.ItemID;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
+import net.runelite.api.Player;
 import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.AnimationChanged;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.GraphicChanged;
 import net.runelite.api.events.HitsplatApplied;
 import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.kit.KitType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -43,11 +48,14 @@ import net.runelite.client.ui.overlay.OverlayManager;
 public class TobDamageCounterPlugin extends Plugin
 {
 	private static final Set<Integer> blacklistNPCs = ImmutableSet.of(NpcID.SUPPORTING_PILLAR);
+	private static final Set<Integer> SALVE_IDS = ImmutableSet.of(ItemID.SALVE_AMULET_E, ItemID.SALVE_AMULETEI, ItemID.SALVE_AMULET, ItemID.SALVE_AMULETI);
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("###.##");
 	private static final DecimalFormat DAMAGE_FORMAT = new DecimalFormat("#,###");
 
 	// world point they put a player in while they check if he is in a raid
 	private static final WorldPoint TEMP_LOCATION = new WorldPoint(3370, 5152, 2);
+
+	private static final int VERZIK_HEAL_GRAPHIC = 1602;
 
 	@Inject
 	private Client client;
@@ -86,6 +94,8 @@ public class TobDamageCounterPlugin extends Plugin
 	{
 		private int personalDamage = 0;
 		private int totalDamage = 0;
+		private int totalHealing = 0;
+		private Map<Player, Integer> leechCounts = new HashMap<>();
 
 		void addDamage(int damage, boolean isLocalPlayer)
 		{
@@ -105,6 +115,23 @@ public class TobDamageCounterPlugin extends Plugin
 			{
 				personalDamage += damage;
 			}
+		}
+
+		void addLeech(Player player)
+		{
+			if (leechCounts.get(player) != null)
+			{
+				leechCounts.put(player, leechCounts.get(player) + 1);
+			}
+			else
+			{
+				leechCounts.put(player, 1);
+			}
+		}
+
+		void addHealing(int amount)
+		{
+			totalHealing += amount;
 		}
 	}
 
@@ -179,6 +206,10 @@ public class TobDamageCounterPlugin extends Plugin
 		{
 			damageMap.get(currentRoom).addDamage(hitsplat.getAmount(), false);
 		}
+		else if (hitsplat.getHitsplatType() == Hitsplat.HitsplatType.HEAL)
+		{
+			damageMap.get(currentRoom).addHealing(hitsplat.getAmount());
+		}
 	}
 
 	@Subscribe
@@ -222,6 +253,80 @@ public class TobDamageCounterPlugin extends Plugin
 		{
 			calcInTob();
 			shouldCalc = false;
+		}
+	}
+
+	@Subscribe
+	public void onGraphicChanged(GraphicChanged event)
+	{
+		if (!inTob)
+		{
+			return;
+		}
+
+		int id = event.getActor().getGraphic();
+
+		if (id == VERZIK_HEAL_GRAPHIC)
+		{
+			if (config.showLeechMessages())
+			{
+				String chatMessage = new ChatMessageBuilder()
+					.append(ChatColorType.HIGHLIGHT)
+					.append(event.getActor().getName() + " has leeched and healed Verzik.")
+					.build();
+
+				chatMessageManager.queue(QueuedMessage.builder()
+					.type(ChatMessageType.FRIENDSCHATNOTIFICATION)
+					.runeLiteFormattedMessage(chatMessage)
+					.build());
+			}
+
+			if (event.getActor() instanceof Player)
+			{
+				damageMap.get(currentRoom).addLeech((Player) event.getActor());
+			}
+		}
+	}
+
+	@Subscribe
+	public void onAnimationChanged(AnimationChanged event)
+	{
+		if (!inTob || !(event.getActor() instanceof Player))
+		{
+			return;
+		}
+
+		Player p = (Player) event.getActor();
+
+		Actor interacting = p.getInteracting();
+		if (interacting == null || !(interacting instanceof NPC) || ((NPC) interacting).getId() != NpcID.PESTILENT_BLOAT)
+		{
+			return;
+		}
+
+		int amulet_id = p.getPlayerComposition().getEquipmentId(KitType.AMULET);
+
+		if (SALVE_IDS.contains(amulet_id))
+		{
+			return;
+		}
+
+		if (config.showLeechMessages())
+		{
+			String chatMessage = new ChatMessageBuilder()
+				.append(ChatColorType.HIGHLIGHT)
+				.append(p.getName() + " is leeching and is not attacking with a salve.")
+				.build();
+
+			chatMessageManager.queue(QueuedMessage.builder()
+				.type(ChatMessageType.FRIENDSCHATNOTIFICATION)
+				.runeLiteFormattedMessage(chatMessage)
+				.build());
+		}
+
+		if (event.getActor() instanceof Player)
+		{
+			damageMap.get(currentRoom).addLeech((Player) event.getActor());
 		}
 	}
 
