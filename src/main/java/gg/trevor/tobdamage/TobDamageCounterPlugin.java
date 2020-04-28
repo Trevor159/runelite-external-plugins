@@ -299,7 +299,10 @@ public class TobDamageCounterPlugin extends Plugin
 		Player p = (Player) event.getActor();
 
 		Actor interacting = p.getInteracting();
-		if (interacting == null || !(interacting instanceof NPC) || ((NPC) interacting).getId() != NpcID.PESTILENT_BLOAT)
+		if (interacting == null
+			|| !(interacting instanceof NPC)
+			|| ((NPC) interacting).getId() != NpcID.PESTILENT_BLOAT
+			|| p.getAnimation() == -1)
 		{
 			return;
 		}
@@ -313,15 +316,19 @@ public class TobDamageCounterPlugin extends Plugin
 
 		if (config.showLeechMessages())
 		{
-			String chatMessage = new ChatMessageBuilder()
-				.append(ChatColorType.HIGHLIGHT)
-				.append(p.getName() + " is leeching and is not attacking with a salve.")
-				.build();
+			Integer leechCount = damageMap.get(currentRoom).getLeechCounts().get(p);
+			if (leechCount == null)
+			{
+				String chatMessage = new ChatMessageBuilder()
+					.append(ChatColorType.HIGHLIGHT)
+					.append(p.getName() + " is leeching and is not attacking with a salve.")
+					.build();
 
-			chatMessageManager.queue(QueuedMessage.builder()
-				.type(ChatMessageType.FRIENDSCHATNOTIFICATION)
-				.runeLiteFormattedMessage(chatMessage)
-				.build());
+				chatMessageManager.queue(QueuedMessage.builder()
+					.type(ChatMessageType.FRIENDSCHATNOTIFICATION)
+					.runeLiteFormattedMessage(chatMessage)
+					.build());
+			}
 		}
 
 		if (event.getActor() instanceof Player)

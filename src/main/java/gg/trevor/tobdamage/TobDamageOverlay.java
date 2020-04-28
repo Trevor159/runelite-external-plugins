@@ -95,7 +95,7 @@ class TobDamageOverlay extends OverlayPanel
 				.right(right)
 				.build());
 
-		if (config.showHealCount())
+		if (config.showHealCount() && damage.getTotalHealing() != 0)
 		{
 			panelComponent.getChildren().add(
 				LineComponent.builder()
