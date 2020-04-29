@@ -3,11 +3,9 @@ plugins {
 }
 
 repositories {
-	mavenLocal()
 	maven {
 		url = 'https://repo.runelite.net'
 	}
-	mavenCentral()
     jcenter()
 }
 
@@ -25,16 +23,16 @@ dependencies {
 	testImplementation group: 'net.runelite', name:'client', version: runeLiteVersion, {
 		exclude group: 'ch.qos.logback', module: 'logback-classic'
 	}
-    
+
     // marytts is an open source tts
     // The license for the program and its deps are here
     // https://github.com/marytts/marytts/blob/master/LICENSE.md
-    
+
     // the voices are licensed individually and are linked below
-    
+
     // https://github.com/marytts/voice-cmu-slt-hsmm/blob/master/LICENSE.txt
     compile group: 'de.dfki.mary', name: 'voice-cmu-slt-hsmm', version: maryttsVersion
-    
+
     // Creative Commons
     // https://github.com/marytts/voice-bits1-hsmm/blob/master/LICENSE.md
     compile group: 'de.dfki.mary', name: 'voice-bits1-hsmm', version: maryttsVersion
@@ -50,7 +48,7 @@ dependencies {
     // Creative Commons
     // https://github.com/marytts/voice-dfki-poppy-hsmm/blob/master/LICENSE.md
     compile group: 'de.dfki.mary', name: 'voice-dfki-poppy-hsmm', version: maryttsVersion
-    
+
     // Creative Commons
     // https://github.com/marytts/voice-enst-camille-hsmm/blob/master/LICENSE.md
     compile group: 'de.dfki.mary', name: 'voice-enst-camille-hsmm', version: maryttsVersion
@@ -70,7 +68,7 @@ dependencies {
     // Creative Commons
     // https://github.com/marytts/voice-dfki-obadiah-hsmm/blob/master/LICENSE.md
     compile group: 'de.dfki.mary', name: 'voice-dfki-obadiah-hsmm', version: maryttsVersion
-    
+
     // https://github.com/marytts/voice-cmu-bdl-hsmm/blob/master/LICENSE.txt
     compile group: 'de.dfki.mary', name: 'voice-cmu-bdl-hsmm', version: maryttsVersion
 
@@ -89,7 +87,7 @@ dependencies {
     // Creative Commons
     // https://github.com/marytts/voice-upmc-jessica-hsmm/blob/master/LICENSE.md
     compile group: 'de.dfki.mary', name: 'voice-upmc-jessica-hsmm', version: maryttsVersion
-    
+
     // https://github.com/marytts/voice-cmu-rms-hsmm/blob/master/LICENSE.txt
     compile group: 'de.dfki.mary', name: 'voice-cmu-rms-hsmm', version: maryttsVersion
 }
