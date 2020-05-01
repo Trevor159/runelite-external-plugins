@@ -27,6 +27,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.GraphicChanged;
 import net.runelite.api.events.HitsplatApplied;
 import net.runelite.api.events.NpcDespawned;
+import net.runelite.api.events.VarbitChanged;
 import net.runelite.api.kit.KitType;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatColorType;
@@ -87,7 +88,8 @@ public class TobDamageCounterPlugin extends Plugin
 	@Getter
 	private Damage raidDamage;
 
-	private boolean shouldCalc = false;
+	private boolean shouldCalc;
+	private boolean loggedIn;
 
 	@Data
 	class Damage
@@ -144,10 +146,7 @@ public class TobDamageCounterPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		if (client.getGameState() == GameState.LOGGED_IN)
-		{
-			clientThread.invokeLater(() -> calcInTob());
-		}
+		clientThread.invokeLater(() -> calcInTob());
 		overlayManager.add(tobDamageOverlay);
 	}
 
@@ -235,7 +234,7 @@ public class TobDamageCounterPlugin extends Plugin
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		if (event.getGameState() == GameState.LOGGED_IN)
+		if (event.getGameState() == GameState.LOGGED_IN && !loggedIn)
 		{
 			if (client.getLocalPlayer() != null && client.getLocalPlayer().getWorldLocation().equals(TEMP_LOCATION))
 			{
@@ -243,6 +242,15 @@ public class TobDamageCounterPlugin extends Plugin
 			}
 
 			shouldCalc = true;
+		}
+		else if (client.getGameState() == GameState.LOGIN_SCREEN
+			|| client.getGameState() == GameState.CONNECTION_LOST)
+		{
+			loggedIn = false;
+		}
+		else if (client.getGameState() == GameState.HOPPING)
+		{
+			reset();
 		}
 	}
 
@@ -253,6 +261,30 @@ public class TobDamageCounterPlugin extends Plugin
 		{
 			calcInTob();
 			shouldCalc = false;
+			loggedIn = true;
+		}
+	}
+
+	@Subscribe
+	public void onVarbitChanged(VarbitChanged event)
+	{
+		boolean tempInTob = getTobState();
+
+		if (tempInTob != inTob)
+		{
+			if (loggedIn)
+			{
+				if (tempInTob)
+				{
+					initializeTob();
+				}
+				else
+				{
+					reset();
+				}
+			}
+
+			inTob = tempInTob;
 		}
 	}
 
@@ -339,28 +371,14 @@ public class TobDamageCounterPlugin extends Plugin
 
 	private void calcCurrentRoom(int npcID)
 	{
-		if (currentRoom == null)
-		{
-			for (TobRooms room : TobRooms.values())
-			{
-				if (room.getNpcIds().contains(npcID))
-				{
-					currentRoom = room;
-					return;
-				}
-			}
-		}
-		else if (currentRoom.getNpcIds().contains(npcID))
+		if (currentRoom != null && currentRoom.getNpcIds().contains(npcID))
 		{
 			return;
 		}
 		else
 		{
-			TobRooms[] values = TobRooms.values();
-
-			for (int i = 0; i < values.length; i++)
+			for (TobRooms room : TobRooms.values())
 			{
-				TobRooms room = values[i];
 				if (room.getNpcIds().contains(npcID))
 				{
 					currentRoom = room;
@@ -375,8 +393,12 @@ public class TobDamageCounterPlugin extends Plugin
 
 	private void calcInTob()
 	{
-		boolean tempInTob = client.getVar(Varbits.THEATRE_OF_BLOOD) == 2
-			|| client.getVar(Varbits.THEATRE_OF_BLOOD) == 3;
+		if (client.getGameState() != GameState.LOGGED_IN)
+		{
+			return;
+		}
+
+		boolean tempInTob = getTobState();
 
 		if (tempInTob != inTob)
 		{
@@ -386,14 +408,24 @@ public class TobDamageCounterPlugin extends Plugin
 			}
 			else if (tempInTob)
 			{
-				for (TobRooms room : TobRooms.values())
-				{
-					damageMap.put(room, new Damage());
-				}
+				initializeTob();
 			}
 
 			inTob = tempInTob;
 		}
+	}
+
+	private void initializeTob()
+	{
+		for (TobRooms room : TobRooms.values())
+		{
+			damageMap.put(room, new Damage());
+		}
+	}
+
+	private boolean getTobState()
+	{
+		return client.getVar(Varbits.THEATRE_OF_BLOOD) == 2 || client.getVar(Varbits.THEATRE_OF_BLOOD) == 3;
 	}
 
 	private void printRoomDamage(TobRooms room, Damage damage)
