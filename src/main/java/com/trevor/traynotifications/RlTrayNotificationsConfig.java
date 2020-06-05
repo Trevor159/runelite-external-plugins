@@ -16,4 +16,14 @@ public interface RlTrayNotificationsConfig extends Config
 	{
 		return RlTrayNotificationsPlugin.MonitorConfig.CURRENT_MONITOR;
 	}
+
+	@ConfigItem(
+			keyName = "corner",
+			name = "Corner",
+			description = "Which corner of your monitor do you want to display the notification on"
+	)
+	default RlTrayNotificationsPlugin.CornerConfig corner()
+	{
+		return RlTrayNotificationsPlugin.CornerConfig.BOTTOM_RIGHT;
+	}
 }
