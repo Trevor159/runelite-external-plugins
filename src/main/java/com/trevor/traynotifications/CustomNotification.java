@@ -93,7 +93,7 @@ class CustomNotification
 		}
 		else
 		{
-			y = display.x + display.width - WIDTH - PADDING;
+			y = display.y + display.height - HEIGHT - PADDING;
 		}
 
 		// Position in lower right corner of the display containing parent
