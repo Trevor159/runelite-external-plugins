@@ -24,10 +24,12 @@
  */
 package com.trevor.traynotifications;
 
+import static com.trevor.traynotifications.RlTrayNotificationsPlugin.CornerConfig.BOTTOM_LEFT;
+import static com.trevor.traynotifications.RlTrayNotificationsPlugin.CornerConfig.TOP_LEFT;
+import static com.trevor.traynotifications.RlTrayNotificationsPlugin.CornerConfig.TOP_RIGHT;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -41,8 +43,6 @@ import net.runelite.client.ui.ClientUI;
 import net.runelite.client.util.ImageUtil;
 import org.pushingpixels.substance.internal.SubstanceSynapse;
 
-import static com.trevor.traynotifications.RlTrayNotificationsPlugin.CornerConfig.*;
-
 class CustomNotification
 {
 	private static final int WIDTH = 360;
@@ -52,16 +52,14 @@ class CustomNotification
 	private static final double ANIMATION_LENGTH_SECONDS = 2.f;
 	private static final double ANIMATION_MAX_LUM = .5f;
 
-	private static final int AUTO_REMOVE_DELAY_MS = 5000;
-
 	private static final BufferedImage RUNELITE_ICON = ImageUtil.getResourceStreamFromClass(RlTrayNotificationsPlugin.class, "/util/runelite100.png");
 
 	static void sendCustomNotification(
 			final String title,
 			final String message,
-			final TrayIcon.MessageType type,
 			final Rectangle display,
-			final RlTrayNotificationsPlugin.CornerConfig cornerConfig
+			final RlTrayNotificationsPlugin.CornerConfig cornerConfig,
+			final int expireTime
 			)
 	{
 		JFrame window = new JFrame();
@@ -126,7 +124,7 @@ class CustomNotification
 		anim.start();
 
 		// Close the window after a delay
-		Timer closeTimer = new Timer(AUTO_REMOVE_DELAY_MS, e ->
+		Timer closeTimer = new Timer(expireTime, e ->
 		{
 			anim.stop();
 			window.setVisible(false);

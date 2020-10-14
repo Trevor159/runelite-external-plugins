@@ -76,7 +76,7 @@ public class RlTrayNotificationsPlugin extends Plugin
 			graphicsConfiguration = device.getDefaultConfiguration();
 		}
 
-		CustomNotification.sendCustomNotification(title, message, type, graphicsConfiguration.getBounds(), config.corner());
+		CustomNotification.sendCustomNotification(title, message, graphicsConfiguration.getBounds(), config.corner(), config.expireTime());
 	}
 
 	@Provides
