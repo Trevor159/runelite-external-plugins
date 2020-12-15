@@ -58,6 +58,9 @@ public class TobDamageCounterPlugin extends Plugin
 
 	private static final int VERZIK_HEAL_GRAPHIC = 1602;
 
+	private static final Set<Integer> maidenSpawns = ImmutableSet.of(NpcID.NYLOCAS_MATOMENOS, NpcID.BLOOD_SPAWN);
+	private static final Set<Integer> verzikIDs = ImmutableSet.of(NpcID.VERZIK_VITUR_8370, NpcID.VERZIK_VITUR_8372, NpcID.VERZIK_VITUR_8374);
+
 	@Inject
 	private Client client;
 
@@ -195,6 +198,19 @@ public class TobDamageCounterPlugin extends Plugin
 		if (currentRoom == null)
 		{
 			return;
+		}
+
+		if (config.showMVPDamage())
+		{
+			if (currentRoom == TobRooms.MAIDEN && maidenSpawns.contains(npc.getId()))
+			{
+				return;
+			}
+
+			if ((currentRoom == TobRooms.VERZIK_P1 || currentRoom == TobRooms.VERZIK_P2 || currentRoom == TobRooms.VERZIK_P3) && !verzikIDs.contains(npc.getId()))
+			{
+				return;
+			}
 		}
 
 		if (hitsplat.isMine())

@@ -44,4 +44,14 @@ public interface TobDamageCounterConfig extends Config
 	default boolean showLeechOverlay() {
 		return true;
 	}
+
+	@ConfigItem(
+		keyName = "mvpDamage",
+		name = "Only count MVP damage",
+		description = "Only count damage that contributes to raid MVP"
+	)
+	default boolean showMVPDamage()
+	{
+		return false;
+	}
 }
