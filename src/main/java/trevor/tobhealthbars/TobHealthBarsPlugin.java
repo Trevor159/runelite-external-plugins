@@ -1,6 +1,8 @@
 package trevor.tobhealthbars;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
+import java.util.Set;
 import javax.inject.Inject;
 import lombok.Data;
 import lombok.Getter;
@@ -8,9 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Varbits;
+import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
-import net.runelite.api.events.WidgetHiddenChanged;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -24,8 +27,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 )
 public class TobHealthBarsPlugin extends Plugin
 {
-	private static final int TOB_ORB_GROUP_ID = 28;
-	private static final int TOB_ORB_CHILD_ID = 10;
+	private static final Set<Integer> TOB_SCRIPTS = ImmutableSet.of(2509, 2296);
 
 	@Inject
 	private Client client;
@@ -89,19 +91,21 @@ public class TobHealthBarsPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onWidgetHiddenChanged(WidgetHiddenChanged event)
+	public void onScriptPostFired(ScriptPostFired event)
 	{
-		if (!inTob || event.isHidden())
+		if (!TOB_SCRIPTS.contains(event.getScriptId()) || !inTob)
 		{
 			return;
 		}
 
-		Widget widget = event.getWidget();
+		Widget widget = client.getWidget(WidgetInfo.TOB_PARTY_STATS);
 
-		if (widget == client.getWidget(TOB_ORB_GROUP_ID, TOB_ORB_CHILD_ID))
+		if (widget == null || widget.isHidden())
 		{
-			widget.setHidden(true);
+			return;
 		}
+
+		widget.setHidden(true);
 	}
 
 	private void setHidden(boolean shouldHide)
@@ -118,7 +122,7 @@ public class TobHealthBarsPlugin extends Plugin
 			return;
 		}
 
-		final Widget widget = client.getWidget(TOB_ORB_GROUP_ID, TOB_ORB_CHILD_ID);
+		final Widget widget = client.getWidget(WidgetInfo.TOB_PARTY_STATS);
 		if (widget != null)
 		{
 			widget.setHidden(shouldHide);
