@@ -13,8 +13,8 @@ import net.runelite.api.Varbits;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
-import net.runelite.api.events.WidgetHiddenChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -38,6 +38,7 @@ public class RaidPointsOverlayPlugin extends Plugin
 	private static final int RAID_TIMER_VARBIT = 6386;
 	private static final int RAID_STATE_VARBIT = 5425;
 	private static final int RAID_BANK_REGION = 4919;
+	private static final int RAID_POINT_WIDGET_SCRIPT = 1510;
 
 	@Inject
 	private Client client;
@@ -96,19 +97,21 @@ public class RaidPointsOverlayPlugin extends Plugin
 	}
 
 	@Subscribe
-	public void onWidgetHiddenChanged(WidgetHiddenChanged event)
+	public void onScriptPostFired(ScriptPostFired event)
 	{
-		if (!inRaidChambers || event.isHidden())
+		if (event.getScriptId() != RAID_POINT_WIDGET_SCRIPT || !inRaidChambers)
 		{
 			return;
 		}
 
-		Widget widget = event.getWidget();
+		Widget widget = client.getWidget(WidgetInfo.RAIDS_POINTS_INFOBOX);
 
-		if (widget == client.getWidget(WidgetInfo.RAIDS_POINTS_INFOBOX))
+		if (widget == null || widget.isHidden())
 		{
-			widget.setHidden(true);
+			return;
 		}
+
+		widget.setHidden(true);
 	}
 
 	@Subscribe
