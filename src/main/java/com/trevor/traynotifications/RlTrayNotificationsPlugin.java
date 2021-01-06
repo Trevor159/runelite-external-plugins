@@ -6,9 +6,9 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.TrayIcon;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.client.RuneLiteProperties;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.RuneLiteConfig;
 import net.runelite.client.eventbus.Subscribe;
@@ -32,6 +32,10 @@ public class RlTrayNotificationsPlugin extends Plugin
 	@Inject
 	private RuneLiteConfig runeLiteConfig;
 
+	@Inject
+	@Named("runelite.title")
+	private String appName;
+
 	public enum MonitorConfig
 	{
 		CURRENT_MONITOR,
@@ -54,7 +58,7 @@ public class RlTrayNotificationsPlugin extends Plugin
 			return;
 		}
 
-		SwingUtilities.invokeLater(() -> sendCustomNotification(RuneLiteProperties.getTitle(), event.getMessage(), event.getType()));
+		SwingUtilities.invokeLater(() -> sendCustomNotification(appName, event.getMessage(), event.getType()));
 	}
 
 	private void sendCustomNotification(
