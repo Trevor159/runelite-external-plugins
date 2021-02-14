@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Client;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.config.RuneLiteConfig;
 import net.runelite.client.eventbus.Subscribe;
@@ -31,6 +32,9 @@ public class RlTrayNotificationsPlugin extends Plugin
 
 	@Inject
 	private RuneLiteConfig runeLiteConfig;
+
+	@Inject
+	private Client client;
 
 	@Inject
 	@Named("runelite.title")
@@ -58,7 +62,18 @@ public class RlTrayNotificationsPlugin extends Plugin
 			return;
 		}
 
-		SwingUtilities.invokeLater(() -> sendCustomNotification(appName, event.getMessage(), event.getType()));
+		String title;
+
+		if (client.getLocalPlayer() != null && client.getLocalPlayer().getName() != null)
+		{
+			title = client.getLocalPlayer().getName();
+		}
+		else
+		{
+			title = appName;
+		}
+
+		SwingUtilities.invokeLater(() -> sendCustomNotification(title, event.getMessage(), event.getType()));
 	}
 
 	private void sendCustomNotification(
