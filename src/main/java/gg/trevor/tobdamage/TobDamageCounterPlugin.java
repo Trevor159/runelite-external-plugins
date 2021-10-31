@@ -2,11 +2,6 @@ package gg.trevor.tobdamage;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import javax.inject.Inject;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +35,12 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
+import javax.inject.Inject;
+import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 @Slf4j
 @PluginDescriptor(
 	name = "TOB Damage Counter",
@@ -57,6 +58,7 @@ public class TobDamageCounterPlugin extends Plugin
 	private static final WorldPoint TEMP_LOCATION = new WorldPoint(3370, 5152, 2);
 
 	private static final int VERZIK_HEAL_GRAPHIC = 1602;
+	private static final int LOCAL_TOB_ORB_VARB = 6441;
 
 	private static final Set<Integer> maidenSpawns = ImmutableSet.of(NpcID.NYLOCAS_MATOMENOS, NpcID.BLOOD_SPAWN);
 	private static final Set<Integer> verzikIDs = ImmutableSet.of(NpcID.VERZIK_VITUR_8370, NpcID.VERZIK_VITUR_8372, NpcID.VERZIK_VITUR_8374);
@@ -81,6 +83,10 @@ public class TobDamageCounterPlugin extends Plugin
 
 	@Getter
 	private boolean inTob;
+
+	//index of local player in tob party
+	@Getter
+	private int localPlayerIndex;
 
 	@Getter
 	private TobRooms currentRoom;
@@ -285,6 +291,7 @@ public class TobDamageCounterPlugin extends Plugin
 	public void onVarbitChanged(VarbitChanged event)
 	{
 		boolean tempInTob = getTobState();
+		localPlayerIndex = client.getVarbitValue(LOCAL_TOB_ORB_VARB);
 
 		if (tempInTob != inTob)
 		{

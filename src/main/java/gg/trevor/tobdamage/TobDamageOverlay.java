@@ -24,15 +24,16 @@
  */
 package gg.trevor.tobdamage;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.util.Map;
-import javax.inject.Inject;
 import net.runelite.api.Player;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import net.runelite.client.util.QuantityFormatter;
+
+import javax.inject.Inject;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.util.Map;
 
 class TobDamageOverlay extends OverlayPanel
 {
@@ -50,7 +51,7 @@ class TobDamageOverlay extends OverlayPanel
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (!plugin.isInTob())
+		if (!plugin.isInTob() || plugin.getLocalPlayerIndex() == 0)
 		{
 			return null;
 		}
