@@ -1,5 +1,12 @@
 package com.trevor.greenscreen;
 
+import net.runelite.api.Client;
+import net.runelite.api.Model;
+import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayPosition;
+
+import javax.inject.Inject;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -8,17 +15,12 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import javax.inject.Inject;
-import net.runelite.api.Client;
-import net.runelite.api.Model;
-import net.runelite.client.ui.overlay.Overlay;
-import net.runelite.client.ui.overlay.OverlayLayer;
-import net.runelite.client.ui.overlay.OverlayPosition;
 
 public class GreenScreenOverlay extends Overlay
 {
 	private Client client;
 	private GreenScreenConfig config;
+	private GreenScreenPlugin plugin;
 
 	@Inject
 	public GreenScreenOverlay(Client client, GreenScreenPlugin plugin, GreenScreenConfig config) {
@@ -27,10 +29,16 @@ public class GreenScreenOverlay extends Overlay
 		setLayer(OverlayLayer.ABOVE_SCENE);
 		this.client = client;
 		this.config = config;
+		this.plugin = plugin;
 	}
 
 	@Override
 	public Dimension render(Graphics2D graphics) {
+
+		if (!plugin.isRenderGreenscreen())
+		{
+			return null;
+		}
 
 		BufferedImage image = new BufferedImage(client.getCanvasWidth(), client.getCanvasHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = image.getGraphics();
