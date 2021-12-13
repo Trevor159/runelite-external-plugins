@@ -102,13 +102,13 @@ public class GreenScreenOverlay extends Overlay
 
 	private Triangle[] getTriangles(Model model)
 	{
-		int[] trianglesX = model.getTrianglesX();
-		int[] trianglesY = model.getTrianglesY();
-		int[] trianglesZ = model.getTrianglesZ();
+		int[] trianglesX = model.getFaceIndices1();
+		int[] trianglesY = model.getFaceIndices2();
+		int[] trianglesZ = model.getFaceIndices3();
 
 		List<Vertex> vertices = getVertices(model);
 
-		int count = model.getTrianglesCount();
+		int count = model.getFaceCount();
 		Triangle[] triangles = new Triangle[count];
 
 		for (int i = 0; i < count; ++i)
