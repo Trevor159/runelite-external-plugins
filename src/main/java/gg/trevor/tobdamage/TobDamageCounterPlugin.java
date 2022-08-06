@@ -34,6 +34,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.api.HitsplatID;
 
 import javax.inject.Inject;
 import java.text.DecimalFormat;
@@ -227,7 +228,7 @@ public class TobDamageCounterPlugin extends Plugin
 		{
 			damageMap.get(currentRoom).addDamage(hitsplat.getAmount(), false);
 		}
-		else if (hitsplat.getHitsplatType() == Hitsplat.HitsplatType.HEAL)
+		else if (hitsplat.getHitsplatType() == HitsplatID.HEAL)
 		{
 			damageMap.get(currentRoom).addHealing(hitsplat.getAmount());
 		}
