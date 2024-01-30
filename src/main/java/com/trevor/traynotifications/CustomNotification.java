@@ -41,7 +41,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.util.ImageUtil;
-import org.pushingpixels.substance.internal.SubstanceSynapse;
+//import org.pushingpixels.substance.internal.SubstanceSynapse;
 
 class CustomNotification
 {
@@ -71,7 +71,7 @@ class CustomNotification
 		window.setFocusableWindowState(false);
 		window.setAlwaysOnTop(true);
 
-		fullySaturateColors(window);
+//		fullySaturateColors(window);
 
 		int x;
 		int y;
@@ -179,11 +179,11 @@ class CustomNotification
 		window.setVisible(true);
 	}
 
-	/**
-	 * Sets the substance Colorization factor to 1.0 so colors don't appear desaturated.
-	 */
-	public static void fullySaturateColors(JFrame window)
-	{
-		((JPanel) window.getContentPane()).putClientProperty(SubstanceSynapse.COLORIZATION_FACTOR, 1.0);
-	}
+//	/**
+//	 * Sets the substance Colorization factor to 1.0 so colors don't appear desaturated.
+//	 */
+//	public static void fullySaturateColors(JFrame window)
+//	{
+//		((JPanel) window.getContentPane()).putClientProperty(SubstanceSynapse.COLORIZATION_FACTOR, 1.0);
+//	}
 }
