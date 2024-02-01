@@ -63,7 +63,7 @@ class CustomNotification
 			)
 	{
 		JFrame window = new JFrame();
-		window.setIconImage(ClientUI.ICON);
+		window.setIconImage(ClientUI.ICON_128);
 
 		// No chrome/decorations
 		window.setUndecorated(true);
