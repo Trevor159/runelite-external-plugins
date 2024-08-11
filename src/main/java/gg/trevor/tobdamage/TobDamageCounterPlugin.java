@@ -412,7 +412,7 @@ public class TobDamageCounterPlugin extends Plugin
 		}
 
 		currentRoom = null;
-		log.warn("NPC ID not handled: " + npcID);
+//		log.warn("NPC ID not handled: " + npcID);
 	}
 
 	private void calcInTob()
