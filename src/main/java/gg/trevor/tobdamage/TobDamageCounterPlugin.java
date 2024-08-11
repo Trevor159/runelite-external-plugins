@@ -59,6 +59,7 @@ public class TobDamageCounterPlugin extends Plugin
 	private static final WorldPoint TEMP_LOCATION = new WorldPoint(3370, 5152, 2);
 
 	private static final int VERZIK_HEAL_GRAPHIC = 1602;
+	private static final int TOB_VAR_STATE = 6440;
 	private static final int LOCAL_TOB_ORB_VARB = 6441;
 
 	private static final Set<Integer> maidenSpawns = ImmutableSet.of(NpcID.NYLOCAS_MATOMENOS, NpcID.BLOOD_SPAWN);
@@ -449,7 +450,7 @@ public class TobDamageCounterPlugin extends Plugin
 
 	private boolean getTobState()
 	{
-		return client.getVar(Varbits.THEATRE_OF_BLOOD) == 2 || client.getVar(Varbits.THEATRE_OF_BLOOD) == 3;
+		return client.getVarbitValue(TOB_VAR_STATE) == 2 || client.getVarbitValue(TOB_VAR_STATE) == 3;
 	}
 
 	private void printRoomDamage(TobRooms room, Damage damage)
