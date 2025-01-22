@@ -32,7 +32,9 @@ import java.text.DecimalFormat;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
+import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
+import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPanel;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
@@ -45,6 +47,7 @@ public class RaidsPointsOverlay extends OverlayPanel
 	private static final DecimalFormat POINTS_FORMAT = new DecimalFormat("#,###");
 	private static final DecimalFormat POINTS_PERCENT_FORMAT = new DecimalFormat(" (##0.00%)");
 	private static final DecimalFormat UNIQUE_FORMAT = new DecimalFormat("#0.00%");
+	private static final int RAID_PARTY_SIZE = 5424;
 
 	private Client client;
 	private RaidPointsOverlayPlugin plugin;
@@ -62,7 +65,7 @@ public class RaidsPointsOverlay extends OverlayPanel
 		this.config = config;
 		this.tooltipManager = tooltipManager;
 		setPosition(OverlayPosition.TOP_RIGHT);
-		setPriority(OverlayPriority.HIGH);
+		setPriority(Overlay.PRIORITY_HIGH);
 	}
 
 	@Override
@@ -73,9 +76,9 @@ public class RaidsPointsOverlay extends OverlayPanel
 			return null;
 		}
 
-		int totalPoints = client.getVar(Varbits.TOTAL_POINTS);
-		int personalPoints = client.getVar(Varbits.PERSONAL_POINTS);
-		int partySize = client.getVar(Varbits.RAID_PARTY_SIZE);
+		int totalPoints = client.getVarbitValue(Varbits.TOTAL_POINTS);
+		int personalPoints = client.getVarpValue(VarPlayer.RAIDS_PERSONAL_POINTS);
+		int partySize = client.getVarbitValue(RAID_PARTY_SIZE);
 		FontMetrics metrics = graphics.getFontMetrics();
 
 		panelComponent.getChildren().add(LineComponent.builder()
