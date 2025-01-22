@@ -15,6 +15,7 @@ import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -91,7 +92,7 @@ public class RaidPointsOverlayPlugin extends Plugin
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		inRaidChambers = client.getVar(Varbits.IN_RAID) == 1;
+		inRaidChambers = client.getVarbitValue(Varbits.IN_RAID) == 1;
 		raidState = client.getVarbitValue(RAID_STATE_VARBIT);
 		timerVarb = client.getVarbitValue(RAID_TIMER_VARBIT);
 	}
@@ -180,14 +181,14 @@ public class RaidPointsOverlayPlugin extends Plugin
 			return;
 		}
 
-		inRaidChambers = client.getVar(Varbits.IN_RAID) == 1;
+		inRaidChambers = client.getVarbitValue(Varbits.IN_RAID) == 1;
 
 		if (!inRaidChambers)
 		{
 			return;
 		}
 
-		final Widget widget = client.getWidget(WidgetInfo.RAIDS_POINTS_INFOBOX);
+		final Widget widget = client.getWidget(ComponentID.RAIDS_POINTS_INFOBOX);
 		if (widget != null)
 		{
 			widget.setHidden(shouldHide);
