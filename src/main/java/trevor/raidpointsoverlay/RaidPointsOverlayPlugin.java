@@ -105,7 +105,7 @@ public class RaidPointsOverlayPlugin extends Plugin
 			return;
 		}
 
-		Widget widget = client.getWidget(WidgetInfo.RAIDS_POINTS_INFOBOX);
+		Widget widget = client.getWidget(ComponentID.RAIDS_POINTS_INFOBOX);
 
 		if (widget == null || widget.isHidden())
 		{
