@@ -7,9 +7,9 @@ import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.VarPlayer;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.gameval.VarPlayerID;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -65,9 +65,9 @@ public class RaidReloaderPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		boolean isInRaid = client.getVar(Varbits.IN_RAID) == 1;
+		boolean isInRaid = client.getVarbitValue(VarbitID.RAIDS_CLIENT_INDUNGEON) == 1;
 		boolean inRaidLobby = (client.getLocalPlayer().getWorldLocation().getRegionID() == RAIDS_LOBBY_REGION);
-		boolean inParty = client.getVar(VarPlayer.IN_RAID_PARTY) != -1;
+		boolean inParty = client.getVarpValue(VarPlayerID.RAIDS_PARTY_GROUPHOLDER) != -1;
 		boolean shouldShow = isInRaid | inRaidLobby | inParty;
 		if (shouldShow != buttonAttatched)
 		{

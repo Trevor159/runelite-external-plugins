@@ -33,7 +33,7 @@ import javax.swing.JPanel;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -78,7 +78,7 @@ public class RaidReloaderPanel extends PluginPanel
 			{
 				if ((client.getGameState() == GameState.LOGGED_IN))
 				{
-					boolean isInRaid = client.getVar(Varbits.IN_RAID) == 1;
+					boolean isInRaid = client.getVarbitValue(VarbitID.RAIDS_CLIENT_INDUNGEON) == 1;
 					if (isInRaid)
 					{
 						client.setGameState(GameState.CONNECTION_LOST);
