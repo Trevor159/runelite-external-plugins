@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
@@ -60,11 +60,11 @@ public class TobHealthBarsPlugin extends Plugin
 
 	@Getter
 	private TobPlayer[] players = new TobPlayer[]{
-		new TobPlayer(6442, 330),
-		new TobPlayer(6443, 331),
-		new TobPlayer(6444, 332),
-		new TobPlayer(6445, 333),
-		new TobPlayer(6446, 334)
+		new TobPlayer(VarbitID.TOB_CLIENT_P0, 330),
+		new TobPlayer(VarbitID.TOB_CLIENT_P1, 331),
+		new TobPlayer(VarbitID.TOB_CLIENT_P2, 332),
+		new TobPlayer(VarbitID.TOB_CLIENT_P3, 333),
+		new TobPlayer(VarbitID.TOB_CLIENT_P4, 334)
 	};
 
 	@Getter
@@ -87,7 +87,7 @@ public class TobHealthBarsPlugin extends Plugin
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event)
 	{
-		inTob = client.getVar(Varbits.THEATRE_OF_BLOOD) > 1;
+		inTob = client.getVarbitValue(VarbitID.TOB_CLIENT_PARTYSTATUS) > 1;
 	}
 
 	@Subscribe
@@ -115,7 +115,7 @@ public class TobHealthBarsPlugin extends Plugin
 			return;
 		}
 
-		inTob = client.getVar(Varbits.THEATRE_OF_BLOOD) > 1;
+		inTob = client.getVarbitValue(VarbitID.TOB_CLIENT_PARTYSTATUS) > 1;
 
 		if (!inTob)
 		{

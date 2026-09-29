@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import javax.inject.Inject;
 import net.runelite.api.Client;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
@@ -15,7 +16,7 @@ import net.runelite.client.ui.overlay.components.TitleComponent;
 public class TobHealthBarsOverlay extends Overlay
 {
 	// value of 1 to 5 based on which orb belongs to the local player
-	private static final int LOCAL_TOB_ORB_VARB = 6441;
+	private static final int LOCAL_TOB_ORB_VARB = VarbitID.TOB_CLIENT_PARTYSLOT;
 
 	private static final Color HP_GREEN = new Color(0, 146, 54, 230);
 	private static final Color HP_RED = new Color(102, 15, 16, 230);
