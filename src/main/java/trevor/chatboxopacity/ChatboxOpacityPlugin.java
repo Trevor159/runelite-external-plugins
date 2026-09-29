@@ -4,7 +4,7 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.Varbits;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.widgets.Widget;
 import static net.runelite.api.widgets.WidgetID.CHATBOX_GROUP_ID;
@@ -97,7 +97,7 @@ public class ChatboxOpacityPlugin extends Plugin
 	{
 		if (client.getGameState() != GameState.LOGGED_IN
 			|| !client.isResized()
-			|| client.getVar(Varbits.TRANSPARENT_CHATBOX) == 0)
+			|| client.getVarbitValue(VarbitID.CHATBOX_TRANSPARENCY) == 0)
 		{
 			return;
 		}
