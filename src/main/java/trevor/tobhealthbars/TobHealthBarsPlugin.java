@@ -11,9 +11,9 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.VarbitChanged;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -98,7 +98,7 @@ public class TobHealthBarsPlugin extends Plugin
 			return;
 		}
 
-		Widget widget = client.getWidget(WidgetInfo.TOB_PARTY_STATS);
+		Widget widget = client.getWidget(InterfaceID.TobHud.STATUS_CONTAINER);
 
 		if (widget == null || widget.isHidden())
 		{
@@ -122,7 +122,7 @@ public class TobHealthBarsPlugin extends Plugin
 			return;
 		}
 
-		final Widget widget = client.getWidget(WidgetInfo.TOB_PARTY_STATS);
+		final Widget widget = client.getWidget(InterfaceID.TobHud.STATUS_CONTAINER);
 		if (widget != null)
 		{
 			widget.setHidden(shouldHide);
