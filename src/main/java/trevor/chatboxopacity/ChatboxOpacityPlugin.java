@@ -4,11 +4,10 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.widgets.Widget;
-import static net.runelite.api.widgets.WidgetID.CHATBOX_GROUP_ID;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -23,7 +22,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 public class ChatboxOpacityPlugin extends Plugin
 {
 	private static final int BUILD_CHATBOX_SCRIPT = 923;
-	private static final int CHATBOX_GROUP = CHATBOX_GROUP_ID;
+	private static final int CHATBOX_GROUP = InterfaceID.CHATBOX;
 	private static final int CHATBOX_BUTTON_BACKGROUND = 3;
 	private static final int ORIGINAL_BUTTON_BACKGROUND_TYPE = 5;
 	private static final int NEW_BUTTON_BACKGROUND_TYPE = 3;
@@ -102,14 +101,14 @@ public class ChatboxOpacityPlugin extends Plugin
 			return;
 		}
 
-		Widget widget = client.getWidget(WidgetInfo.CHATBOX_MESSAGES);
+		Widget widget = client.getWidget(InterfaceID.Chatbox.MES_LAYER_HIDE);
 
 		if (widget == null || widget.isHidden())
 		{
 			return;
 		}
 
-		widget = client.getWidget(WidgetInfo.CHATBOX_TRANSPARENT_BACKGROUND);
+		widget = client.getWidget(InterfaceID.Chatbox.CHAT_BACKGROUND);
 
 		Widget[] children = widget.getChildren();
 
